@@ -3,22 +3,23 @@ const axios = require('axios')
 const cheerio = require('cheerio');
 const { segment } = require('koishi');
 
-let baseUrl = "http://jandan.net/top"
+let baseUrl = "http://jandan.net";
+let top = "/top";
+let top4h = "/top-4h";
+
 let storage = {
     updateTime:"",
     dataList:[],
     views:[]
 }
-
-// todo getDataObj
+// todo update url concat
+// todo no date auto get next page
 async function getTop(session) {
     if(storage.updateTime ==="" || (new Date() - storage.updateTime) / 1000 / 60 /60 >= 1) {
-        let html = await request(baseUrl);
+        let html = await request(baseUrl + top4h);
         analyzeAndSave(html,storage);
     }
     let result = storage.dataList.pop();
-    // let result = "http://wx1.sinaimg.cn/large/7dd42f11ly1gtgndycqmmj20j60r5juf.jpg"
-    // session.send();
 
     let results = [];
     results.push(segment("text",{content:"赞:"+result.pos+"\t踩:"+result.neg}));
@@ -44,7 +45,7 @@ setTimeout(() => {
 
 function analyzeAndSave(html,storage) {
     const $ = cheerio.load(html.data);
-    let commentList = $("#pic ol li");
+    let commentList = $("ol.commentlist li");
     for (let i=0;i< commentList.length;i++) {
         let el = commentList[i];
         let url = $(".author a",el).attr("name");
