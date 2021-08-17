@@ -6,22 +6,31 @@ const { segment } = require('koishi');
 let baseUrl = "http://jandan.net";
 let top = "/top";
 let top4h = "/top-4h";
-
-let storage = {
+let cid;
+const storage = {
     updateTime:"",
     dataList:[],
+    usersPoint:{},
     views:[]
 }
 // todo update url concat
-// todo fix all user use one datastorge 
- function getTop(session) {
-    if(storage.updateTime ==="" || (new Date() - storage.updateTime) / 1000 / 60 /60 >= 1) {
-        analyzeAndSave(baseUrl + top4h,storage);
-    } else if (storage.dataList.length == 0) {
-        session.send("没了",segment("face",{id:"174"}))
-    }
-    let result = storage.dataList.pop();
+// set docker 
+async function getTop(session) {
 
+    this.session = session;
+    let index = 0;
+    if (storage.usersPoint[cid] === undefined) {
+        storage.usersPoint[cid] = 0;
+    } else {
+        index = storage.usersPoint[cid];
+    }
+    storage.usersPoint[cid] ++;
+
+    if(index > storage.dataList.length ) {
+        session.send("没了看完了等一小时后重置吧",segment("face",{id:"174"}));
+    } 
+
+    let result = storage.dataList[index];
     let results = [];
     let posText = segment("face",{id:"76"});
     let negText = segment("face",{id:"77"});
@@ -31,24 +40,28 @@ let storage = {
     results.push(segment("text",{content:result.content}))
     for (let i = 0; i < result.imgs.length; i++) {
         const img = result.imgs[i];
-        console.log(img)
         results.push(segment("image",{url:`http:${img}`}));
     }
     
     
     session.send(results.join("\n"))
 }
-
+analyzeAndSave(baseUrl + top4h,storage);
 function request(url) {
     return axios.get(url)
 }
 setTimeout(() => {
     console.log("auto update:",new Date())
     analyzeAndSave(baseUrl + top4h,storage);
-}, 1000 * 60 * 60 * 2);
+    for (i in storage.usersPoint) {
+        storage.usersPoint[i] = 0;
+    }
+
+}, 1000 * 30);
 
 
 async function analyzeAndSave(url,storage) {
+    console.log("get data...")
     let html = await request(url);
     const $ = cheerio.load(html.data);
     let commentList = $("ol.commentlist li");
@@ -86,6 +99,7 @@ async function analyzeAndSave(url,storage) {
 module.exports = (ctx) => {
     ctx.middleware((session, next) => {
       if (session.content === 'd') {
+        cid = session.cid;
         getTop(session);
       }
       return next()
