@@ -13,16 +13,21 @@ let storage = {
     views:[]
 }
 // todo update url concat
-// todo no date auto get next page
-async function getTop(session) {
+// todo fix all user use one datastorge 
+ function getTop(session) {
     if(storage.updateTime ==="" || (new Date() - storage.updateTime) / 1000 / 60 /60 >= 1) {
-        let html = await request(baseUrl + top4h);
-        analyzeAndSave(html,storage);
+        analyzeAndSave(baseUrl + top4h,storage);
+    } else if (storage.dataList.length == 0) {
+        session.send("没了",segment("face",{id:"174"}))
     }
     let result = storage.dataList.pop();
 
     let results = [];
-    results.push(segment("text",{content:"赞:"+result.pos+"\t踩:"+result.neg}));
+    let posText = segment("face",{id:"76"});
+    let negText = segment("face",{id:"77"});
+    let posVal = result.pos;
+    let negVal = result.neg;
+    results.push(`${posText}:${posVal}\t${negText}:${negVal}`);
     results.push(segment("text",{content:result.content}))
     for (let i = 0; i < result.imgs.length; i++) {
         const img = result.imgs[i];
@@ -39,11 +44,12 @@ function request(url) {
 }
 setTimeout(() => {
     console.log("auto update:",new Date())
-    analyzeAndSave(html,storage);
+    analyzeAndSave(baseUrl + top4h,storage);
 }, 1000 * 60 * 60 * 2);
 
 
-function analyzeAndSave(html,storage) {
+async function analyzeAndSave(url,storage) {
+    let html = await request(url);
     const $ = cheerio.load(html.data);
     let commentList = $("ol.commentlist li");
     for (let i=0;i< commentList.length;i++) {
