@@ -6,6 +6,7 @@ const { segment } = require('koishi');
 let baseUrl = "http://jandan.net";
 let top = "/top";
 let top4h = "/top-4h";
+var time = 60 * 60 * 1;
 let cid;
 const storage = {
     updateTime:"",
@@ -14,6 +15,8 @@ const storage = {
     views:[]
 }
 // todo update url concat
+// use database stroe date
+// format double number %.2f
 // set docker 
 async function getTop(session) {
 
@@ -27,7 +30,7 @@ async function getTop(session) {
     storage.usersPoint[cid] ++;
 
     if(index > storage.dataList.length ) {
-        session.send("没了看完了等一小时后重置吧",segment("face",{id:"174"}));
+        session.send(`没了看完了等${time/60}分钟后重置吧${segment("face",{id:"174"})}`);
     } 
 
     let result = storage.dataList[index];
@@ -50,15 +53,18 @@ analyzeAndSave(baseUrl + top4h,storage);
 function request(url) {
     return axios.get(url)
 }
-setTimeout(() => {
-    console.log("auto update:",new Date())
-    analyzeAndSave(baseUrl + top4h,storage);
-    for (i in storage.usersPoint) {
-        storage.usersPoint[i] = 0;
+var t = setInterval(function () {
+    if(time <= 0) {
+        clearinterval(t);
+        console.log("auto update:",new Date())
+        analyzeAndSave(baseUrl + top4h,storage);
+        for (i in storage.usersPoint) {
+            storage.usersPoint[i] = 0;
+        }
+    } else {
+        time --;
     }
-
-}, 1000 * 30);
-
+}, 1000)
 
 async function analyzeAndSave(url,storage) {
     console.log("get data...")
