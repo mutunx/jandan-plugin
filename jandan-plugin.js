@@ -28,6 +28,7 @@ const storage = {
 // use database stroe date
 // format double number %.2f
 // set docker 
+// pic size too large emit
 async function getTop(session) {
     let cid = session.cid;
     this.session = session;
@@ -50,12 +51,12 @@ async function getTop(session) {
     let posVal = result.pos;
     let negVal = result.neg;
     results.push(`${posText}:${posVal}\t${negText}:${negVal}`);
-    results.push(segment("text",{content:result.content}))
+    results.push(segment("text",{content:result.content}));
     for (let i = 0; i < result.imgs.length; i++) {
         const img = result.imgs[i];
         results.push(segment("image",{url:`http:${img}`}));
     }
-    
+    results.push("/",result.id);
     
     session.send(results.join("\n"))
 }
