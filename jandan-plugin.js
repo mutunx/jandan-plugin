@@ -15,7 +15,7 @@ let topComments = config.jandan.topComments;
 let top3days = config.jandan.top3days;
 let top7days = config.jandan.top7days;
 let time = config.jandan.refreshInterval;
-let cid;
+
 const storage = {
     updateTime:"",
     dataList:[],
@@ -29,7 +29,7 @@ const storage = {
 // format double number %.2f
 // set docker 
 async function getTop(session) {
-
+    let cid = session.cid;
     this.session = session;
     let index = 0;
     if (storage.usersPoint[cid] === undefined) {
@@ -122,7 +122,6 @@ module.exports = (ctx) => {
 
     ctx.middleware((session, next) => {
       if (session.content === 'd') {
-        cid = session.cid;
         getTop(session);
       }
       return next()
