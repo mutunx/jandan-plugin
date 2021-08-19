@@ -1,0 +1,11 @@
+jandan:
+  baseUrl: "http://jandan.net"
+  top: "/top"
+  top4h: "/top-4h"
+  topTucao: "/top-tucao"
+  topOoxx: "/top-ooxx"
+  topZoo: "/top-zoo"
+  topComments: "/top-comments"
+  top3days: "/top-3days"
+  top7days: "/top-7days"
+  refreshInterval: 60 * 60 * 1

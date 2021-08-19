@@ -1,12 +1,20 @@
 
 const axios = require('axios')
 const cheerio = require('cheerio');
+const fs = require("fs");
+const YAML = require("yamljs")
 const { segment } = require('koishi');
-
-let baseUrl = "http://jandan.net";
-let top = "/top";
-let top4h = "/top-4h";
-var time = 60 * 60 * 1;
+const config = loadYAMLFile("./config.yaml");
+let baseUrl = config.jandan.baseUrl;
+let top = config.jandan.top;
+let top4h = config.jandan.top4h;
+let topTucao = config.jandan.topTucao;
+let topOoxx = config.jandan.topOoxx;
+let topZoo = config.jandan.topZoo;
+let topComments = config.jandan.topComments;
+let top3days = config.jandan.top3days;
+let top7days = config.jandan.top7days;
+let time = config.jandan.refreshInterval;
 let cid;
 const storage = {
     updateTime:"",
@@ -15,6 +23,8 @@ const storage = {
     views:[]
 }
 // todo update url concat
+// add more part
+// add log
 // use database stroe date
 // format double number %.2f
 // set docker 
@@ -49,6 +59,11 @@ async function getTop(session) {
     
     session.send(results.join("\n"))
 }
+
+function loadYAMLFile(file) {
+    return YAML.parse(fs.readFileSync(file).toString());
+}
+
 analyzeAndSave(baseUrl + top4h,storage);
 function request(url) {
     return axios.get(url)
@@ -103,6 +118,8 @@ async function analyzeAndSave(url,storage) {
 
 
 module.exports = (ctx) => {
+    
+
     ctx.middleware((session, next) => {
       if (session.content === 'd') {
         cid = session.cid;
