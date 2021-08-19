@@ -29,6 +29,8 @@ const storage = {
 // format double number %.2f
 // set docker 
 // pic size too large emit
+// pic cache 
+// add manual reset index
 async function getTop(session) {
     let cid = session.cid;
     this.session = session;
@@ -54,11 +56,20 @@ async function getTop(session) {
     results.push(segment("text",{content:result.content}));
     for (let i = 0; i < result.imgs.length; i++) {
         const img = result.imgs[i];
-        results.push(segment("image",{url:`http:${img}`}));
+        results.push(segment("image",{
+            url:`http:${img}`,
+            timeout:1000*5,
+        }));
     }
-    results.push("/",result.id);
+    results.push(`/t/${result.id}`);
     
-    session.send(results.join("\n"))
+    
+    session.send(results.join("\n"));
+    // session.send(segment("share",{
+    //     url:baseUrl+`/t/${result.id}`,
+    //     title:"jandan",
+    //     content:`/t/${result.id}`
+    // }));
 }
 
 function loadYAMLFile(file) {
