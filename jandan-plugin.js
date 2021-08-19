@@ -58,7 +58,8 @@ async function getTop(session) {
         const img = result.imgs[i];
         results.push(segment("image",{
             url:`http:${img}`,
-            timeout:1000*5,
+            timeout:`5000`,
+            cache:true,
         }));
     }
     results.push(`/t/${result.id}`);
