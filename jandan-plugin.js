@@ -135,8 +135,9 @@ module.exports = (ctx) => {
 
     ctx.middleware((session, next) => {
       if (session.content === 'd') {
-        getTop(session);
+          session.send(`稍等...${segment("face",{id:"190"})}`);
+          getTop(session);
       }
-      return next()
+      return next() 
     })
   }
