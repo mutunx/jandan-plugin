@@ -22,8 +22,7 @@ const storage = {
 // pic size too large emit
 // pic cache 
 // add manual reset index
-// fix timeout NaN
-// add countdown
+// add help 
 async function jandan(session) {
     let cid = session.cid;
     const type = session.content;
@@ -138,7 +137,7 @@ module.exports = (ctx) => {
 
     ctx.middleware((session, next) => {
       if (Object.keys(cmds).includes(session.content)) {
-          session.send(`少男祈祷中...${segment("face",{id:"190"})}`);
+          session.send(segment("face",{id:"202"}));
           jandan(session);
       }
       return next() 
