@@ -8,4 +8,15 @@ jandan:
   topComments: "/top-comments"
   top3days: "/top-3days"
   top7days: "/top-7days"
+  cmds:
+    {
+      d: "/top",
+      d4: "/top-4h",
+      dt: "/top-tucao",
+      ds: "/top-ooxx",
+      dd: "/top-zoo",
+      dy: "/top-comments",
+      d3: "/top-3days",
+      d7: "/top-7days",
+    }
   refreshInterval: 60 * 60 * 1
