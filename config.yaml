@@ -19,4 +19,4 @@ jandan:
       d3: "/top-3days",
       d7: "/top-7days",
     }
-  refreshInterval: 60 * 60 * 1
+  refreshInterval: 3600

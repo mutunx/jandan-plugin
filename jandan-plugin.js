@@ -15,7 +15,6 @@ const storage = {
     views:[]
 }
 // todo update url concat
-// 
 // add log
 // use database stroe date
 // format double number %.2f
@@ -24,6 +23,7 @@ const storage = {
 // pic cache 
 // add manual reset index
 // fix timeout NaN
+// add countdown
 async function jandan(session) {
     let cid = session.cid;
     const type = session.content;
@@ -59,6 +59,7 @@ async function jandan(session) {
         }));
     }
     response.push(`/t/${result.id}`);
+    response.push(`${storage.dataList[type].length-1-index}/${storage.dataList[type].length}`);
     
     
     session.send(response.join("\n"));
