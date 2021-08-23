@@ -26,7 +26,6 @@ const storage = {
 async function jandan(session) {
     let cid = session.cid;
     const type = session.content;
-    this.session = session;
     let index = 0;
     if (storage.usersPoint[cid] === undefined) {
         storage.usersPoint[cid] = new Object();   
@@ -53,12 +52,12 @@ async function jandan(session) {
         const img = result.imgs[i];
         response.push(segment("image",{
             url:`http:${img}`,
-            timeout:`5000`,
+            timeout:`10000`,
             cache:true,
         }));
     }
     response.push(`/t/${result.id}`);
-    response.push(`${storage.dataList[type].length-1-index}/${storage.dataList[type].length}`);
+    response.push(`${index+1}/${storage.dataList[type].length}`);
     
     
     session.send(response.join("\n"));
@@ -134,12 +133,15 @@ init();
 
 module.exports = (ctx) => {
     
-
+    
     ctx.middleware((session, next) => {
       if (Object.keys(cmds).includes(session.content)) {
           session.send(segment("face",{id:"202"}));
           jandan(session);
       }
       return next() 
-    })
+    });
+    ctx.command("d1 <msg>","d 无聊图\n d4 4小时热门 \n d3 三日最热\n d7 七日最热 \ndy 优评 ")
+    .action((_,msg) => msg)
+
   }
