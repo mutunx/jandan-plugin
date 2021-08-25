@@ -30,8 +30,9 @@ async function jandan(session) {
     storage.usersPoint[cid][type] ++;
 
     if(index >= storage.dataList[type].length ) {
-        session.send(`没了看完了等${time/60}分钟后重置吧${segment("face",{id:"174"})}`);
+        session.send(`没了看完了等${(time/60).toFixed(2)}分钟后重置吧${segment("face",{id:"174"})}`);
         storage.usersPoint[cid][type] = -1;
+        return;
     } 
 
     let result = storage.dataList[type][index];
