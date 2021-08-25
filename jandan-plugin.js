@@ -8,21 +8,14 @@ const config = loadYAMLFile("./config.yaml");
 const baseUrl = config.jandan.baseUrl;
 let time = config.jandan.refreshInterval;
 let cmds = config.jandan.cmds;
+const top4h = config.jandan.top4h;
 const storage = {
     updateTime:"",
     dataList:{},
     usersPoint:{},
     views:[]
 }
-// todo update url concat
-// add log
-// use database stroe date
-// format double number %.2f
-// set docker 
-// pic size too large emit
-// pic cache 
-// add manual reset index
-// add help 
+
 async function jandan(session) {
     let cid = session.cid;
     const type = session.content;
@@ -36,8 +29,9 @@ async function jandan(session) {
     index = storage.usersPoint[cid][type];
     storage.usersPoint[cid][type] ++;
 
-    if(index > storage.dataList[type].length ) {
+    if(index >= storage.dataList[type].length ) {
         session.send(`没了看完了等${time/60}分钟后重置吧${segment("face",{id:"174"})}`);
+        storage.usersPoint[cid][type] = -1;
     } 
 
     let result = storage.dataList[type][index];
@@ -70,13 +64,19 @@ function loadYAMLFile(file) {
 function request(url) {
     return axios.get(url)
 }
+
+// update 4h part by interval time and init users view position
 var t = setInterval(function () {
     if(time <= 0) {
-        clearinterval(t);
+        time = config.jandan.refreshInterval;
         console.log("auto update:",new Date())
-        analyzeAndSave(baseUrl + top4h,storage);
+        analyzeAndSave("d4");
         for (i in storage.usersPoint) {
-            storage.usersPoint[i] = 0;
+            for (k in storage.usersPoint[i]) {
+                if (storage.usersPoint[i][k] === -1 || k === "d4") {
+                    storage.usersPoint[i][k] = 0;
+                } 
+            }
         }
     } else {
         time --;
@@ -120,7 +120,7 @@ async function analyzeAndSave(...types) {
     }
 }
 
-
+// get all part of jandan hot
 async function init() {
     console.log("init...");
     const keys = Object.keys(cmds);
