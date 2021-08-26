@@ -37,11 +37,11 @@ async function jandan(session) {
 
     let result = storage.dataList[type][index];
     let response = [];
-    let posText = segment("face",{id:"76"});
-    let negText = segment("face",{id:"77"});
+    let posText = segment("face",{id:"201"});
+    let negText = segment("face",{id:"204"});
     let posVal = result.pos;
     let negVal = result.neg;
-    response.push(`${posText}:${posVal}\t${negText}:${negVal}`);
+    response.push(`${posText} ${posVal}\t${negText} ${negVal}`);
     response.push(segment("text",{content:result.content}));
     for (let i = 0; i < result.imgs.length; i++) {
         const img = result.imgs[i];
