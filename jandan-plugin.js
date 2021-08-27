@@ -37,10 +37,13 @@ async function jandan(session) {
 
     let result = storage.dataList[type][index];
     let response = [];
+    let dividerFront = `${index+1}/${storage.dataList[type].length}---------------------------->/t/${result.id}`;
+    let dividerEnd = dividerFront;
     let posText = segment("face",{id:"201"});
     let negText = segment("face",{id:"204"});
     let posVal = result.pos;
     let negVal = result.neg;
+    response.push(dividerFront);
     response.push(`${posText} ${posVal}\t${negText} ${negVal}`);
     response.push(segment("text",{content:result.content}));
     for (let i = 0; i < result.imgs.length; i++) {
@@ -51,8 +54,6 @@ async function jandan(session) {
             cache:true,
         }));
     }
-    response.push(`/t/${result.id}`);
-    response.push(`${index+1}/${storage.dataList[type].length}`);
     
     
     session.send(response.join("\n"));
