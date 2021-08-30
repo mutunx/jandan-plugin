@@ -82,6 +82,7 @@ var t = setInterval(function () {
     if(time <= 0) {
         time = config.jandan.refreshInterval;
         console.log("auto update:",now);
+        storage.dataList["d4"] = [];
         analyzeAndSave("d4");
         for (i in storage.usersPoint) {
             for (k in storage.usersPoint[i]) {
