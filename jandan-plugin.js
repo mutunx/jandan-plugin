@@ -69,9 +69,19 @@ function request(url) {
 
 // update 4h part by interval time and init users view position
 var t = setInterval(function () {
+    let now = new Date();
+    if (now.getHours() === 6) {
+        console.log("new day new data");
+        init();
+        for (i in storage.usersPoint) {
+            for (k in storage.usersPoint[i]) {
+                storage.usersPoint[i][k] = 0;
+            }
+        }
+    }
     if(time <= 0) {
         time = config.jandan.refreshInterval;
-        console.log("auto update:",new Date())
+        console.log("auto update:",now);
         analyzeAndSave("d4");
         for (i in storage.usersPoint) {
             for (k in storage.usersPoint[i]) {
