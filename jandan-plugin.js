@@ -30,14 +30,14 @@ async function jandan(session) {
     storage.usersPoint[cid][type] ++;
 
     if(index >= storage.dataList[type].length ) {
-        session.send(`没了看完了等${(time/60).toFixed(2)}分钟后重置吧${segment("face",{id:"174"})}`);
+        session.send(`没了${cmds[type].name}看完了等${(time/60).toFixed(2)}分钟后重置吧,也可以看看别的${segment("face",{id:"174"})}`);
         storage.usersPoint[cid][type] = -1;
         return;
     } 
 
     let result = storage.dataList[type][index];
     let response = [];
-    let dividerFront = `${index+1}/${storage.dataList[type].length}---------------------------->/t/${result.id}`;
+    let dividerFront = `${cmds[type].name}${index+1}/${storage.dataList[type].length}-------->/t/${result.id}`;
     let dividerEnd = dividerFront;
     let posText = segment("face",{id:"201"});
     let negText = segment("face",{id:"204"});
@@ -99,7 +99,7 @@ var t = setInterval(function () {
 async function analyzeAndSave(...types) {
     for (let i = 0; i < types.length; i++) {
         const type = types[i];
-        const url = baseUrl + cmds[type];
+        const url = baseUrl + cmds[type].url;
         let html = await request(url);
         const $ = cheerio.load(html.data);
         let commentList = $("ol.commentlist li");
@@ -154,7 +154,6 @@ module.exports = (ctx) => {
       }
       return next() 
     });
-    ctx.command("d1 <msg>","d 无聊图\n d4 4小时热门 \n d3 三日最热\n d7 七日最热 \ndy 优评 ")
-    .action((_,msg) => msg)
+
 
   }

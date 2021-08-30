@@ -10,13 +10,45 @@ jandan:
   top7days: "/top-7days"
   cmds:
     {
-      d: "/top",
-      d4: "/top-4h",
-      dt: "/top-tucao",
-      ds: "/top-ooxx",
-      dd: "/top-zoo",
-      dy: "/top-comments",
-      d3: "/top-3days",
-      d7: "/top-7days",
+      d:
+     {
+     url: "/top",
+     name: "热榜",
+     },
+      d4:
+     {
+     url: "/top-4h",
+     name: "4小时热门",
+     },
+      dt:
+     {
+     url: "/top-tucao",
+     name: "吐槽",
+     },
+      ds:
+     {
+     url: "/top-ooxx",
+     name: "随手拍",
+     },
+      dd:
+     {
+     url: "/top-zoo",
+     name: "动物园",
+     },
+      dy:
+     {
+     url: "/top-comments",
+     name: "优评",
+     },
+      d3:
+     {
+     url: "/top-3days",
+     name: "3日热门",
+     },
+      d7:
+     {
+     url: "/top-7days",
+     name: "7日热门",
+     },
     }
   refreshInterval: 3600
