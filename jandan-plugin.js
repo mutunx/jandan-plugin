@@ -70,8 +70,8 @@ function request(url) {
 // update 4h part by interval time and init users view position
 var t = setInterval(function () {
     let now = new Date();
-    if (now.getHours() === 6) {
-        console.log("new day new data");
+    if (now.getHours() === 6 && now.getMinutes() === 30 && now.getSeconds() === 30) {
+        console.log("new day new data",new Date());
         init();
         for (i in storage.usersPoint) {
             for (k in storage.usersPoint[i]) {
@@ -135,7 +135,7 @@ async function analyzeAndSave(...types) {
 
 // get all part of jandan hot
 async function init() {
-    console.log("init...");
+    console.log("init...",new Date());
     const keys = Object.keys(cmds);
     for (i of keys) {
         storage.dataList[i] = [];
