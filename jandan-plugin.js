@@ -54,6 +54,10 @@ async function jandan(session) {
             cache:true,
         }));
     }
+    if (result.tucao !== undefined && result.tucao !== null && result.tucao !== "") {
+        response.push(`>>>${segment("face",{id:"299"})}吐槽:`)
+        response.push(`${result.tucao}`)
+    }
     
     
     session.send(response.join("\n"));
@@ -113,7 +117,9 @@ async function analyzeAndSave(...types) {
                 imgs.push(img.attribs.href)
             }
             imgs = imgs.reverse();
-            let content = $("p",el).text();
+            let content = $(".text  p",el).text();
+            let tucao = $(".tucao-content p",el).text();
+            content = content.replace(tucao,"");
             let pos = $(".jandan-vote span",el)[0].children[0].data;
             let neg = $(".jandan-vote span",el)[1].children[0].data;
             let commentObj = {
@@ -122,6 +128,7 @@ async function analyzeAndSave(...types) {
                 imgs:imgs,
                 pos:pos,
                 neg:neg,
+                tucao:tucao,
             }
             if (!storage.views.includes(name)) {
                 storage.dataList[type].push(commentObj);
