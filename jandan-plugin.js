@@ -107,6 +107,7 @@ async function analyzeAndSave(...types) {
         let html = await request(url);
         const $ = cheerio.load(html.data);
         let commentList = $("ol.commentlist li");
+        console.log(`get type ${i} ${commentList.length} comments`)
         for (let i=0;i< commentList.length;i++) {
             let el = commentList[i];
             let name = $(".author a",el).attr("name");
@@ -147,7 +148,11 @@ async function init() {
     for (i of keys) {
         storage.dataList[i] = [];
     }
+    storage.views = [];
     await analyzeAndSave(...keys);
+    for (i of keys) {
+        console.log(`${i}更新完成,获取数据个数${storage.dataList[i].length}`);
+    }
 }
 init();
 
